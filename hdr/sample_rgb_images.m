@@ -45,7 +45,7 @@ end
 % @return sampled_blue is an Nx1 column vector with the sample from the blue channel
 function [sampled_red, sampled_green, sampled_blue] = sample_exposure(image, sample_indices)
     assert(size(sample_indices, 1) == 1, 'Dimension of sample_indices is incorrect.');
-    sample_indices = sample_indices'    % Use a column of indices so that we get back a column.
+    sample_indices = sample_indices';    % Use a column of indices so that we get back a column.
     
     % Get the constituent channels.
     red_img = image(:,:,1);
