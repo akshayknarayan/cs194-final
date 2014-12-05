@@ -20,7 +20,7 @@ function result = apply_bilateral_filter(img, window, sigma_d, sigma_r)
     result = zeros(img_height, img_width);
     for i = 1:img_height
         if (mod(i, 100) == 1)
-            fprintf('Computing filter response for rows %d to %d (out of %d)\n', i, max(i+99, img_height), img_height);
+            fprintf('Computing filter response for rows %d to %d (out of %d)\n', i, min(i+99, img_height), img_height);
         end
         for j = 1:img_width
             % Current window to work with.  Added bounds check to make sure the window works at edge.
