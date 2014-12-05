@@ -28,7 +28,7 @@ function [images, exposure_times] = read_images(directory, extension)
         curr_img_file = ['input/' directory '/' files(i).name];
         fprintf('Reading image %s\n', curr_img_file);
         curr_img_info = imfinfo(curr_img_file);
-        images{i} = im2double(imread(curr_img_file));
+        images{i} = imread(curr_img_file);
         exposure_times(i) = curr_img_info.DigitalCamera.ExposureTime;
     end
 end
