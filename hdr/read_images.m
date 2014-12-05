@@ -9,7 +9,7 @@
 % @param extension (optional) specifies the extension to match for the images.  If not provided, 
 % the default extension used is 'jpg'
 % @return images, a cell array containing the images which have been read in
-% @return exposure_times, a cell array containing the exposure times for those images
+% @return exposure_times, a matrix containing the exposure times for those images
 function [images, exposure_times] = read_images(directory, extension)
     % If extension is not provided, use default extension of jpg.
     if (~exist('extension'))
@@ -20,7 +20,7 @@ function [images, exposure_times] = read_images(directory, extension)
     files = dir(['input/' directory '/*.' extension]);
     num_files = numel(files);
     images = cell(num_files, 1);
-    exposure_times = cell(num_files, 1);
+    exposure_times = zeros(num_files, 1);
 
     % Read in images and associated exposure times.
     fprintf('== Reading %s images from directory input/%s ==\n', extension, directory);
@@ -29,6 +29,6 @@ function [images, exposure_times] = read_images(directory, extension)
         fprintf('Reading image %s\n', curr_img_file);
         curr_img_info = imfinfo(curr_img_file);
         images{i} = im2double(imread(curr_img_file));
-        exposure_times{i} = curr_img_info.DigitalCamera.ExposureTime;
+        exposure_times(i) = curr_img_info.DigitalCamera.ExposureTime;
     end
 end
