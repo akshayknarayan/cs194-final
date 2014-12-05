@@ -2,6 +2,14 @@
 % Name:  Japheth Wong and Akshay Narayan
 % Login: cs194-fb and cs194-ka
 
+% compute_hdr_map() is a helper function which creates the HDR radiance map.
+% @param images is a cell array of the input images
+% @param g_red is the camera response for the red channel
+% @param g_green is the camera response for the green channel
+% @param g_blue is the camera response for the blue channel
+% @param weights is the weight vector to use
+% @param ln_dt is the log of the exposure times
+% @return hdr_map is the HDR radiance map we are trying to compute
 function hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_dt)
     fprintf('== Computing HDR map ==\n');
     num_exposures = numel(images);
