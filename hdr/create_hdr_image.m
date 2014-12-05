@@ -14,6 +14,7 @@ function result = create_hdr_image(directory, extension, lambda)
     weights = compute_weights();
 
     % Solve for the camera response for each color channel.
+    fprintf('== Computing camera response for each channel ==\n');
     [g_red, le_red] = gsolve(z_red, ln_dt, lambda, weights);
     [g_green, le_green] = gsolve(z_green, ln_dt, lambda, weights);
     [g_blue, le_blue] = gsolve(z_blue, ln_dt, lambda, weights);

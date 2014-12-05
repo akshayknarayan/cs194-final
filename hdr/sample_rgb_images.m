@@ -10,6 +10,7 @@
 % @return z_green is the Z matrix for the green channel
 % @return z_blue is the Z matrix for the blue channel
 function [z_red, z_green, z_blue] = sample_rgb_images(images)
+    fprintf('== Sampling images to construct the Z matrices for each channel == \n');
     num_exposures = numel(images);      % Value of P.
 
     % Number of samples should satisfy:     N(P-1) > Z_max - Z_min
