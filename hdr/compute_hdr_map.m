@@ -20,7 +20,7 @@ function hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_d
 
     for i = 1 : num_exposures
         % Grab the current image we are processing and split into channels.
-        curr_image = images{i} + 1;     % Grab the current image.  Add 1 to get rid of zeros.
+        curr_image = double(images{i}+1);     % Grab the current image.  Add 1 to get rid of zeros.
         curr_red = curr_image(:,:,1);
         curr_green = curr_image(:,:,2);
         curr_blue = curr_image(:,:,3);
@@ -33,8 +33,8 @@ function hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_d
         curr_num(:,:,1) = curr_weight(:,:,1) .* (g_red(curr_red) - ln_dt(i));
         curr_num(:,:,2) = curr_weight(:,:,2) .* (g_green(curr_green) - ln_dt(i));
         curr_num(:,:,3) = curr_weight(:,:,3) .* (g_blue(curr_blue) - ln_dt(i));
-        curr_num = curr_weight .* curr_num;
         
+        % Sum into the numerator and denominator.
         numerator = numerator + curr_num;
         denominator = denominator + curr_weight;
     end
