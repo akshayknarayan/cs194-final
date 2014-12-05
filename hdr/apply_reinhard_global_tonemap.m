@@ -23,8 +23,7 @@ function result = apply_reinhard_global_tonemap(hdr_map, a)     % Consider addin
     % key = --- exp{\sum_{x,y} (log(delta + L_{w}(x, y)))}
     %        N
     % (L_{w} represents the input world luminance from the luminance_map)
-%     key = (1 / num_pixels) * exp(sum(sum(log(delta + luminance_map))));
-    key = exp((1 / num_pixels) * sum(sum(log(delta + luminance_map))));
+    key = exp((1 / num_pixels) * sum(sum(log(delta + luminance_map))));     % Seems to blow up if 1/N is outside exp.
 
     % Compute the scaled luminance of the image.
     %            a
@@ -39,8 +38,5 @@ function result = apply_reinhard_global_tonemap(hdr_map, a)     % Consider addin
     display_luminance = scaled_luminance ./ (1 + scaled_luminance);
 
     % Get the final image.
-    result = zeros(height, width, num_channels);
-    for ch = 1 : num_channels
-        result(:,:,ch) = ((hdr_map(:,:,ch) ./ luminance_map)) .* display_luminance;
-    end
+    result = apply_tonemap(hdr_map, luminance_map, display_luminance);
 end
