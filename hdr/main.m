@@ -3,6 +3,7 @@
 % Login: cs194-fb and cs194-ka
 
 function main()
-    result = create_hdr_image(50, 0.09, 'station', 'jpg');
-    figure, imshow(result);
+    [linear_result, global_result] = create_hdr_image(50, 0.09, 'station', 'jpg');
+    figure, imshow(linear_result);
+    figure, imshow(global_result);
 end

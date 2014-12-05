@@ -14,7 +14,7 @@
 % images.  WARNING: Must not contain trailing slash!
 % @param extension (optional) is the file extension of the images.  Default
 % is 'jpg'
-function result = create_hdr_image(lambda, a, directory, extension)
+function [linear_result, global_result] = create_hdr_image(lambda, a, directory, extension)
     % Read in images and exposure times from directory.  Take the log of exposure time.
     [images, exposure_times] = read_images(directory, extension);
     ln_dt = log(exposure_times);
@@ -34,6 +34,9 @@ function result = create_hdr_image(lambda, a, directory, extension)
     % Compute the HDR radiance map.
     hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_dt);
 
+    % Apply baseline linear tone mapping.
+    linear_result = apply_linear_tonemap(hdr_map);
+
     % Apply Reinhard's global tone mapping.
-    result = apply_reinhard_global_tonemap(hdr_map, a);
+    global_result = apply_reinhard_global_tonemap(hdr_map, a);
 end
