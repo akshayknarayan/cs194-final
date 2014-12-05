@@ -9,5 +9,5 @@
 function weights = compute_weights()
     fprintf('== Computing weights ==\n');
     weights = 1:256;
-    weights = min(weights, 256 - weights + 1);  % TODO Added one here to make sure we don't end up with zero weights.  Check if this is needed.
+    weights = min(weights, 256 - weights);
 end
