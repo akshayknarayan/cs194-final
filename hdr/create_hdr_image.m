@@ -19,7 +19,7 @@ function result = create_hdr_image(directory, extension, lambda)
     [g_blue, le_blue] = gsolve(z_blue, ln_dt, lambda, weights);
 
     % Compute the HDR radiance map.
-
+    hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_dt);
 
 
 end
