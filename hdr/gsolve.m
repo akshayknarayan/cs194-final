@@ -6,11 +6,11 @@
 % (Debevec and Malik, SIGGRAPH 1997)
 % http://www.pauldebevec.com/Research/HDR/debevec-siggraph97.pdf
 %
-% gsolve.m − Solve for imaging system response function
+% gsolve.m - Solve for imaging system response function
 %
 % Given a set of pixel values observed for several pixels in several
 % images with different exposure times, this function returns the
-% imaging system’s response function g as well as the log film irradiance
+% imaging system's response function g as well as the log film irradiance
 % values for the observed pixels.
 %
 % Assumes:
@@ -35,13 +35,13 @@ function [g,lE] = gsolve(Z,B,l,w)
     A = zeros(size(Z,1)*size(Z,2)+n+1,n+size(Z,1));
     b = zeros(size(A,1),1);
 
-    %% Include the data−fitting equations
+    %% Include the data-fitting equations
     k = 1;
     for i=1:size(Z,1)
         for j=1:size(Z,2)
             wij = w(Z(i,j)+1);
             A(k,Z(i,j)+1) = wij; 
-            A(k,n+i) = −wij; 
+            A(k,n+i) = -wij; 
             % b(k,1) = wij * B(i,j);
             b(k,1) = wij * B(j);
             k = k+1;
@@ -53,9 +53,9 @@ function [g,lE] = gsolve(Z,B,l,w)
     k = k+1;
 
     %% Include the smoothness equations
-    for i = 1:n−2
+    for i = 1:n-2
         A(k,i) = l * w(i+1); 
-        A(k,i+1) = −2 * l * w(i+1); 
+        A(k,i+1) = -2 * l * w(i+1); 
         A(k,i+2) = l * w(i+1);
         k = k+1;
     end
