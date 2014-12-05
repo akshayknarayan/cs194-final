@@ -11,7 +11,8 @@ function result = create_hdr_image(directory, extension)
     [z_red, z_green, z_blue] = sample_rgb_images(images);
 
     % Compute the weighting function needed.
-    
+    weights = compute_weights();
+
 
     % Solve for the camera response for each color channel.
 
