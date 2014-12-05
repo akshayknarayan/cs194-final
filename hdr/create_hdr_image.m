@@ -14,7 +14,7 @@
 % images.  WARNING: Must not contain trailing slash!
 % @param extension (optional) is the file extension of the images.  Default
 % is 'jpg'
-function [linear_result, global_result, durand_result] = create_hdr_image(lambda, a, directory, extension)
+function [linear_result, global_result, durand_result] = create_hdr_image(lambda, a, dR, gamma, directory, extension)
     % Read in images and exposure times from directory.  Take the log of exposure time.
     [images, exposure_times] = read_images(directory, extension);
     ln_dt = log(exposure_times);
@@ -41,5 +41,5 @@ function [linear_result, global_result, durand_result] = create_hdr_image(lambda
     global_result = apply_reinhard_global_tonemap(hdr_map, a);
 
     % Apply Durand's tone mapping scheme.
-    durand_result = apply_durand_tonemap(hdr_map);
+    durand_result = apply_durand_tonemap(hdr_map, dR, gamma);
 end

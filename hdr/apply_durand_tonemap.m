@@ -24,15 +24,11 @@ function result = apply_durand_tonemap(hdr_map, dR, gamma)
     chrominance_green = green_channel ./ intensity;
     chrominance_blue = blue_channel ./ intensity;
 
-    figure, imshow(chrominance_red);
-    figure, imshow(chrominance_green);
-    figure, imshow(chrominance_blue);
-
     % Compute the log intensity.  L = log_{2}(I)
     log_intensity = log2(intensity);    % TODO: Handle cases when intensity is zero!
 
     % Filter the log intensity with a bilateral filter.  B = bf(L)
-    base = apply_bilateral_filter(log_intensity);
+    base = apply_bilateral_filter(log_intensity, 5, 15, 15);
 
     % Compute the detail layer.  D = L - B
     detail_layer = log_intensity - base;
@@ -52,5 +48,5 @@ function result = apply_durand_tonemap(hdr_map, dR, gamma)
     result(:,:,3) = reconstructed_intensity .* chrominance_blue;
 
     % Apply gamma compression.  Try result^0.5 (gamma = 0.5) or use simple global intensity scaling.
-    result = result ^ gamma;
+    result = result .^ gamma;
 end
