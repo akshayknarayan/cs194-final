@@ -4,7 +4,7 @@
 
 function main()
     directory = 'station';
-    [linear_result, global_result, durand_result] = create_hdr_image(50, 0.09, 4, 0.5, directory, 'jpg');
+    [linear_result, global_result, durand_result] = create_hdr_image(50, 0.09, 5, 0.6, directory, 'jpg');
 
     figure, imshow(linear_result);
     figure, imshow(global_result);

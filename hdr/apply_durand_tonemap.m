@@ -6,7 +6,8 @@
 % proposed in Durand's SIGGRAPH 2002 paper, Fast Bilateral Filtering for HDR Display.
 % @param hdr_map is the HDR radiance map for the image
 % @param dR represents the stops of the dynamic range.  As covered in the spec, choose a value 
-% between 2 and 8; typically values of 4 or 5 work well
+% between 2 and 8; typically values of 4 or 5 work well.  Higher dR value seems to produce a darker 
+% image.
 % @param gamma is the value to use for gamma compression to ensure the result won't look too dark. 
 % Typically a value of 0.5 is good.
 % @return result is the result of applying the Durand tonemap to the HDR radiance map, which should 
