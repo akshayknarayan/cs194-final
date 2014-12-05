@@ -9,11 +9,9 @@
 % output image from tone mapping.  Lower values generate darker pictures while higher values 
 % generate brighter ones.  Use 0.18, 0.36, or 0.72 for bright pictures and 0.09, 0.045, etc for 
 % darker pictures.
-% @param saturation is a factor between 0.0 amd 1.0 used to determine the threshold for color 
-% saturation.  According to Fattal's 2002 SIGGRAPH paper, values of 0.4 to 0.6 worked well.
 % @return result is the resulting displayable image once we have applied the tonemap
-function result = apply_reinhard_global_tonemap(hdr_map, a, saturation)     % Consider adding white.
-    fprintf('== Applying Reinhard Global Tonemap (a = %.3f, sat = %.3f) ==\n', a, saturation);
+function result = apply_reinhard_global_tonemap(hdr_map, a)     % Consider adding white.
+    fprintf('== Applying Reinhard Global Tonemap (a = %.3f) ==\n', a);
     % Constants.
     [height, width, num_channels] = size(hdr_map);
     num_pixels = height * width;
@@ -43,6 +41,6 @@ function result = apply_reinhard_global_tonemap(hdr_map, a, saturation)     % Co
     % Get the final image.
     result = zeros(height, width, num_channels);
     for ch = 1 : num_channels
-        result(:,:,ch) = ((hdr_map(:,:,ch) ./ luminance_map) .^ saturation) .* display_luminance;
+        result(:,:,ch) = ((hdr_map(:,:,ch) ./ luminance_map)) .* display_luminance;
     end
 end
