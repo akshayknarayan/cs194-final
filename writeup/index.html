@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CS194-26 Final Project | Japheth Wong and Akshay Narayan</title>
+        <style type="text/css">
+            body {
+                font-family: tahoma;
+                font-size: 12px;
+                background: #eee;
+                color: black;
+                margin: 0px;
+
+            }
+
+            #container {
+                margin: 0px auto;
+                padding: 20px 50px 50px 50px;
+                width: 900px;
+                background: white;
+            }
+
+            h1 {
+                font-size: 24px;
+                clear: both;
+            }
+
+            h2 {
+                font-size: 18px;
+                color: #676767;
+                clear: both;
+            }
+
+            h3 {
+                font-size: 13px;
+                color: #999;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            a {
+                color: #0D4875;
+            }
+
+            a:hover {
+                color: #389CDC;
+            }
+
+            td {
+                padding: 5px 5px;
+                vertical-align: top;
+            }
+
+            td:first-child {
+                padding-left: 0;
+            }
+
+            p, b, td {
+                font-size: 12px;
+            }
+
+            ul.nav {
+                list-style-image: url(images/RightArrow.gif);
+                list-style-position:inside;
+                padding-left: 0;
+            }
+
+            ul.nav li {
+                line-height:18px;
+            }
+
+            ul li p, ol li p {
+                margin: 4px 0px;
+            }
+
+            a.back_to_top {
+                font-size:10px;
+                clear:both;
+            }
+
+            h3 + table {
+                margin-top: -8px;
+            }
+
+            h3 + table p, p + table p {
+                margin-top: 0px;
+            }
+
+            .code {
+                font-family: "courier";
+            }
+
+            table {
+                width: 900px;
+            }
+
+            table.results img {
+                max-width: 290px;
+                height: auto;
+            }
+
+            table.results tr:first-child p, table.results tr td:first-child p {
+                text-decoration: underline;
+            }
+
+        </style>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <div id="container">
+            <h1 id="top">CS194-26 Final Project</h1>
+            <p><b>Japheth Wong (cs194-fb) and Akshay Narayan (cs194-ka)</b> | University of California, Berkeley | Prof. Alexei (Alyosha) Efros</p>
+
+            <h2 id="nav">Navigation</h2>
+            <table>
+                <tr>
+                    <td>
+                        <b><a href="#hdr">High Dynamic Range</a></b>
+                        <ul class="nav">
+                            <li><a href="#hdr_overview">Project Overview</a></li>
+                            <li><a href="#hdr_algorithm">Algorithm</a></li>
+                            <li><a href="#hdr_results">Results</a></li>
+                            <li><a href="#hdr_references">References</a></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <b><a href="#miniatures">Fake Miniatures</a></b>
+                        <ul class="nav">
+                            <li><a href="#miniatures_overview">Project Overview</a></li>
+                            <li><a href="#miniatures_algorithm">Algorithm</a></li>
+                            <li><a href="#miniatures_results">Results</a></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <b><a href="#vertigo">Vertigo Shots</a></b>
+                        <ul class="nav">
+                            <li><a href="#vertigo_overview">Project Overview</a></li>
+                            <li><a href="#vertigo_technique">Technique</a></li>
+                            <li><a href="#vertigo_results">Results</a></li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="hdr">
+                <h1>High Dynamic Range</h1>
+
+                <h2 id="hdr_overview">Project Overview</h2>
+
+                <p>Often times, photographers wish to capture and portray scenes in the real world which have high dynamic range.  Modern cameras, however, are unable to capture this range: these devices struggle to map this range to one of 256 intensity values in each color channel.  This means that in some scenes, even the best photographs will be partially over- or under-exposed.</p>
+
+                <p>One solution for photographers is to take multiple exposures of the same scene by varying the shutter speed.  These exposures will vary in the parts which are optimally exposed, and can be combined together to form a single result which better reflects the high-dynamic-range scene.  This project is about recovering the radiance map from multiple exposures and using tone mapping to create the final, displayable result.</p>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="hdr_algorithm">Algorithm</h2>
+
+                
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="hdr_results">Results</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="hdr_references">References</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+            </div>
+
+            <div id="miniatures">
+                <h1>Fake Miniatures</h1>
+
+                <h2 id="miniatures_overview">Project Overview</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="miniatures_algorithm">Algorithm</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="miniatures_results">Results</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+            </div>
+
+            <div id="vertigo">
+                <h1>Vertigo Shots</h1>
+
+                <h2 id="vertigo_overview">Project Overview</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="vertigo_technique">Technique</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+
+                <h2 id="vertigo_results">Results</h2>
+
+                <a href="#top" class="back_to_top">Back to Top</a>
+            </div>
+        </div>
+    </body>
+</html>
