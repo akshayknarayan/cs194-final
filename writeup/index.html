@@ -77,6 +77,10 @@
                 clear:both;
             }
 
+            *.code {
+                font-family: courier;
+            }
+
             h3 + table {
                 margin-top: -8px;
             }
@@ -154,7 +158,58 @@
 
                 <h2 id="hdr_algorithm">Algorithm</h2>
 
+                <p>The algorithm can be broken down into two major parts:</p>
+                <ol>
+                    <li><p><b>Recovering the radiance map.</b>  The focus here is on taking the exposure values from each of the individual images, translating these curves, and recovering a single, smooth curve which represents the radiance map of the image.  This radiance map, however, is still not displayable by current devices.</p></li>
+                    <li><p><b>Tone mapping.</b>  The focus here is on taking the radiance map and mapping it to intensity values between 0 and 256 in order to create an image that can be displayed.</p></li>
+                </ol>
+
+                <h3>Recovering the Radiance Map</h3>
+
+                <p>The value of the \(i\)th pixel in the \(j\)th exposure is a function of (unknown) irradiances and (known) exposure times.  In equation form:
+
+                $$Z_{ij} = f(E_{i} \Delta t_{j})$$
+
+                In practice, it is easier to define a camera response function \(g = \ln f^{-1}\) and to solve for the following equation instead, which will be useful in recovering the radiance map:
+
+                $$g(Z_{ij}) = \ln(f^{-1}(Z_{ij})) = \ln(E_{i}) + \ln(\Delta t_{j})$$
+                </p>
+
+                <p><b>Image Sampling</b></p>
+
+                <p>We begin by reading in all of the images in the directory and recording the log of the associated exposure times.  One initial tradeoff we must make is the number of pixels to use in our sample: we want to ensure we have enough pixels to broadly cover the entire range of pixel values, but also want to minimize the sample size to improve performance.  Let \(N\) represent the number of pixels we will sample, \(P\) be the number of exposures (images) we have to work with, and \(Z_{min}\) and \(Z_{max}\) represent the minimum and maximum pixel values in our image.  Then, we use the constraint specified by Debevec 1997 to determine the number of sample points we need:
+
+                $$N(P-1) \gt Z_{max} - Z_{min} \Rightarrow N = 2 \lceil \frac{(Z_{max} - Z_{min})}{P-1} \rceil$$
+
+                The same pixels in the sample are selected from each exposure, and are used to help solve for the camera response.</p>
+
+                <p><b>Computing Weights</b></p>
+
+                <p>We expect the camera response to fit the data more poorly at the extremes, so it is important to emphasize the fitting on the center part of the curve.  As such, we use a simple weighting scheme which peaks at the midpoint pixel value.
+
+                $$  w(z) = \begin{cases}
+                           z - Z_{min} &  z \leq \frac{1}{2}(Z_{max} - Z_{min}) \\
+                           Z_{max} - z &  z \gt \frac{1}{2}(Z_{max} - Z_{min}) 
+                           \end{cases} $$
+
+                <p><b>Compute the Camera Response</b></p>
+
+                <p>Using these components, we can solve for the camera response.  Because this is an overdetermined system, we wish to minimize the following objective function, which consists of a fitting term (left component) and a smoothing term (right component):
+
+                $$ O = \sum_{i=1}^{N} \sum_{j=1}^{P} {w(Z_{ij}) [g(Z_{ij} - \ln E_{i} - \ln \Delta t_{j})]}^{2} + \lambda \sum_{z=Z_{min}+1}^{Z_{max}-1}[w(z) g''(z)]^{2}$$
                 
+                This can be done using the <span class="code">gsolve.m</span> provided in the <a href="http://www.pauldebevec.com/Research/HDR/debevec-siggraph97.pdf">Debevec 1997</a> paper.
+                </p>
+
+                <p><b>Compute the HDR Radiance Map</b></p>
+
+                <p>Once we have this information, we can finally compute the radiance map.  The equation we follow for the log of the radiance is as follows:
+
+                $$\ln E_{i} = \frac{\sum_{j=1}^{P} w(Z_{ij})[g(Z_{ij} - \ln \Delta t_{j})]}{\sum_{j=1}^{P} w_(Z_{ij})}$$
+
+                </p>
+
+                <h3>Tone Mapping</h3>
 
                 <a href="#top" class="back_to_top">Back to Top</a>
 
