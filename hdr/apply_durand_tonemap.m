@@ -12,7 +12,7 @@
 % Typically a value of 0.5 is good.
 % @return result is the result of applying the Durand tonemap to the HDR radiance map, which should 
 % be displayable on a normal display
-function result = apply_durand_tonemap(hdr_map, dR, gamma)
+function result = apply_durand_tonemap(directory, hdr_map, dR, gamma)
     % Compute the intensity by averaging the color channels.
     intensity = mean(hdr_map, 3);
 
@@ -50,4 +50,19 @@ function result = apply_durand_tonemap(hdr_map, dR, gamma)
 
     % Apply gamma compression.  Try result^0.5 (gamma = 0.5) or use simple global intensity scaling.
     result = result .^ gamma;
+    
+    % Plot results.
+%     plot_results(directory, intensity, detail_layer);
+end
+
+function plot_results(directory, intensity, detail_layer)
+    h1 = figure;
+    imagesc(intensity);
+    set(h1,'PaperUnits','inches','PaperPosition',[0 0 5 3]);
+    saveas(h1, ['output/' directory '_intensity.jpg']);
+    
+    h2 = figure;
+    imshow(detail_layer);
+    set(h2,'PaperUnits','inches','PaperPosition',[0 0 5 3]);
+    saveas(h2, ['output/' directory '_detail_layer.jpg']);
 end

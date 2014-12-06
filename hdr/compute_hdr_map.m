@@ -10,7 +10,7 @@
 % @param weights is the weight vector to use
 % @param ln_dt is the log of the exposure times
 % @return hdr_map is the HDR radiance map we are trying to compute
-function hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_dt)
+function hdr_map = compute_hdr_map(directory, images, g_red, g_green, g_blue, weights, ln_dt)
     fprintf('== Computing HDR map ==\n');
     num_exposures = numel(images);
     [height, width, num_channels] = size(images{1});  % Assume all images are the same size.
@@ -39,5 +39,19 @@ function hdr_map = compute_hdr_map(images, g_red, g_green, g_blue, weights, ln_d
         denominator = denominator + curr_weight;
     end
 
-    hdr_map = exp(numerator ./ denominator);
+    ln_hdr_map = numerator ./ denominator;
+    hdr_map = exp(ln_hdr_map);
+    
+    % Plot radiance map.
+%     plot_radiance_map(directory, ln_hdr_map);
+end
+
+function plot_radiance_map(directory, map)
+    map = map ./ max(max(max(map)));
+    map(find(map < 0)) = 0;
+    map(find(map > 1)) = 1;
+    h = figure;
+    imagesc(map);
+    set(h,'PaperUnits','inches','PaperPosition',[0 0 5 3]);
+    saveas(h, ['output/' directory '_radiance_map.jpg']);
 end
