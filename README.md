@@ -58,7 +58,7 @@ Our MATLAB code is laid out as follows:
 
 * **read_images.m:** This is a helper function which reads in the images and exposure times for all images in a directory.
 
-* *sample_rgb_images.m:** This is a helper function which constructs the Z matrix of samples to use.  This is necessary because a full-size image has way too many pixels; here, we choose pixels to sample and use in our algorithm.
+* **sample_rgb_images.m:** This is a helper function which constructs the Z matrix of samples to use.  This is necessary because a full-size image has way too many pixels; here, we choose pixels to sample and use in our algorithm.
 
 ### References
 
