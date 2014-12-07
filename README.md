@@ -84,3 +84,14 @@ Our MATLAB code is laid out as follows:
 
 ## Miniatures
 
+There is one source file for the Fake Miniatures project, tiltshift.py. There are a number of functions:
+
+* saturate() increases the saturation of an image.
+
+* get_point() collects an input point to determine the focus line.
+
+* applyProgressiveGaussian() recursively applies a gaussian along the parts of the image split among the focus line
+
+* minify() is a wrapper around applyProgressiveGaussian() that makes it more intuitive to use.
+
+* The other code in the file exists to call the functions above.
