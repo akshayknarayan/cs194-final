@@ -17,7 +17,7 @@ def saturate(im, amount=1.1):
   hue = np.take(hsvim, 0, axis=2)
   sat = np.take(hsvim, 1, axis=2)
   val = np.take(hsvim, 2, axis=2)
-  sat = sat * amount
+#   sat = sat * amount
   newhsv = np.dstack((hue, sat, val))
   return skcolor.hsv2rgb(newhsv)
 
