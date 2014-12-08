@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,133 +8,442 @@
     <meta name="author" content="Akshay Narayan and Japheth Wong">
     <title>
       CS194-26 Final Project | Japheth Wong and Akshay Narayan
-    </title>
-    
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/akshayStyle.css" rel="stylesheet">
-    <link href="css/carousel.css" rel="stylesheet">
-    
-    <!-- Custom styles for this template -->
-    <link href="css/sticky-footer-navbar.css" rel="stylesheet">
-    
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  </head>
+  </title>
 
-  <body>
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/akshayStyle.css" rel="stylesheet">
+  <link href="css/carousel.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/sticky-footer-navbar.css" rel="stylesheet">
+
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body>
     <div class="header">
       <div class="container">
         <h1>Japheth Wong and Akshay Narayan</h1>
         <h2>cs194-ka</h2>
         <h2>CS194-26 Final Project</h2>
-      </div>
     </div>
+</div>
 
-    <div class="center">
-      &#9733;
-      <a href="#hdr">High Dynamic Range</a> &#9733;
-      <a href="#miniatures">Fake Miniatures</a> &#9733;
-      <a href="#vertigo">Vertigo Shot</a> &#9733;
-    </div>
+<div class="center">
+  &#9733;
+  <a href="#hdr">High Dynamic Range</a> &#9733;
+  <a href="#miniatures">Fake Miniatures</a> &#9733;
+  <a href="#vertigo">Vertigo Shot</a> &#9733;
+</div>
 
-    <div id="container">
+<div id="container">
 
-      <div class="header">
-        <p class="text-muted">&#9733; HDR &#9733; <a style="color:gray" id="#openHDR"></a></p>
-      </div>
+  <div class="header">
+    <p class="text-muted">&#9733; HDR &#9733; <a style="color:gray" id="#openHDR"></a></p>
+</div>
 
-      <div id="hdr">
-          <h1>High Dynamic Range</h1>
+<div id="hdr">
+  <h1>High Dynamic Range</h1>
 
-          <h2 id="hdr_overview">Project Overview</h2>
+  <h2 id="hdr_overview">Project Overview</h2>
 
-          <p>Often times, photographers wish to capture and portray scenes in the real world which have high dynamic range.  Modern cameras, however, are unable to capture this range: these devices struggle to map this range to one of 256 intensity values in each color channel.  This means that in some scenes, even the best photographs will be partially over- or under-exposed.</p>
+  <p>Often times, photographers wish to capture and portray scenes in the real world which have high dynamic range.  Modern cameras, however, are unable to capture this range: these devices struggle to map this range to one of 256 intensity values in each color channel.  This means that in some scenes, even the best photographs will be partially over- or under-exposed.</p>
 
-          <p>One solution for photographers is to take multiple exposures of the same scene by varying the shutter speed.  These exposures will vary in the parts which are optimally exposed, and can be combined together to form a single result which better reflects the high-dynamic-range scene.  This project is about recovering the radiance map from multiple exposures and using tone mapping to create the final, displayable result.</p>
+  <p>One solution for photographers is to take multiple exposures of the same scene by varying the shutter speed.  These exposures will vary in the parts which are optimally exposed, and can be combined together to form a single result which better reflects the high-dynamic-range scene.  This project is about recovering the radiance map from multiple exposures and using tone mapping to create the final, displayable result.</p>
 
-          <a href="#top" class="back_to_top">Back to Top</a>
+  <a href="#top" class="back_to_top">Back to Top</a>
 
-          <h2 id="hdr_algorithm">Algorithm</h2>
+  <h2 id="hdr_algorithm">Algorithm</h2>
 
-          <p>The algorithm can be broken down into two major parts:</p>
-          <ol>
-              <li><p><b>Recovering the radiance map.</b>  The focus here is on taking the exposure values from each of the individual images, translating these curves, and recovering a single, smooth curve which represents the radiance map of the image.  This radiance map, however, is still not displayable by current devices.</p></li>
-              <li><p><b>Tone mapping.</b>  The focus here is on taking the radiance map and mapping it to intensity values between 0 and 256 in order to create an image that can be displayed.</p></li>
-          </ol>
+  <p>The algorithm can be broken down into two major parts:</p>
+  <ol>
+      <li><p><b>Recovering the radiance map.</b>  The focus here is on taking the exposure values from each of the individual images, translating these curves, and recovering a single, smooth curve which represents the radiance map of the image.  This radiance map, however, is still not displayable by current devices.</p></li>
+      <li><p><b>Tone mapping.</b>  The focus here is on taking the radiance map and mapping it to intensity values between 0 and 256 in order to create an image that can be displayed.</p></li>
+  </ol>
 
-          <h3>Recovering the Radiance Map</h3>
+  <h3>Recovering the Radiance Map</h3>
 
-          <p>The value of the \(i\)th pixel in the \(j\)th exposure is a function of (unknown) irradiances and (known) exposure times.  In equation form:
+  <p>The value of the \(i\)th pixel in the \(j\)th exposure is a function of (unknown) irradiances and (known) exposure times.  In equation form:
 
-          $$Z_{ij} = f(E_{i} \Delta t_{j})$$
+      $$Z_{ij} = f(E_{i} \Delta t_{j})$$
 
-          In practice, it is easier to define a camera response function \(g = \ln f^{-1}\) and to solve for the following equation instead, which will be useful in recovering the radiance map:
+      In practice, it is easier to define a camera response function \(g = \ln f^{-1}\) and to solve for the following equation instead, which will be useful in recovering the radiance map:
 
-          $$g(Z_{ij}) = \ln(f^{-1}(Z_{ij})) = \ln(E_{i}) + \ln(\Delta t_{j})$$
-          </p>
+      $$g(Z_{ij}) = \ln(f^{-1}(Z_{ij})) = \ln(E_{i}) + \ln(\Delta t_{j})$$
+  </p>
 
-          <p><b>Image Sampling</b></p>
+  <p><b>Image Sampling</b></p>
 
-          <p>We begin by reading in all of the images in the directory and recording the log of the associated exposure times.  One initial tradeoff we must make is the number of pixels to use in our sample: we want to ensure we have enough pixels to broadly cover the entire range of pixel values, but also want to minimize the sample size to improve performance.  Let \(N\) represent the number of pixels we will sample, \(P\) be the number of exposures (images) we have to work with, and \(Z_{min}\) and \(Z_{max}\) represent the minimum and maximum pixel values in our image.  Then, we use the constraint specified by Debevec 1997 to determine the number of sample points we need:
+  <p>We begin by reading in all of the images in the directory and recording the log of the associated exposure times.  One initial tradeoff we must make is the number of pixels to use in our sample: we want to ensure we have enough pixels to broadly cover the entire range of pixel values, but also want to minimize the sample size to improve performance.  Let \(N\) represent the number of pixels we will sample, \(P\) be the number of exposures (images) we have to work with, and \(Z_{min}\) and \(Z_{max}\) represent the minimum and maximum pixel values in our image.  Then, we use the constraint specified by Debevec 1997 to determine the number of sample points we need:
 
-          $$N(P-1) \gt Z_{max} - Z_{min} \Rightarrow N = 2 \lceil \frac{(Z_{max} - Z_{min})}{P-1} \rceil$$
+      $$N(P-1) \gt Z_{max} - Z_{min} \Rightarrow N = 2 \lceil \frac{(Z_{max} - Z_{min})}{P-1} \rceil$$
 
-          The same pixels in the sample are selected from each exposure, and are used to help solve for the camera response.</p>
+      The same pixels in the sample are selected from each exposure, and are used to help solve for the camera response.</p>
 
-          <p><b>Computing Weights</b></p>
+      <p><b>Computing Weights</b></p>
 
-          <p>We expect the camera response to fit the data more poorly at the extremes, so it is important to emphasize the fitting on the center part of the curve.  As such, we use a simple weighting scheme which peaks at the midpoint pixel value.
+      <p>We expect the camera response to fit the data more poorly at the extremes, so it is important to emphasize the fitting on the center part of the curve.  As such, we use a simple weighting scheme which peaks at the midpoint pixel value.
 
           $$  w(z) = \begin{cases}
-                     z - Z_{min} &  z \leq \frac{1}{2}(Z_{max} - Z_{min}) \\
-                     Z_{max} - z &  z \gt \frac{1}{2}(Z_{max} - Z_{min}) 
-                     \end{cases} $$
+          z - Z_{min} &  z \leq \frac{1}{2}(Z_{max} - Z_{min}) \\
+          Z_{max} - z &  z \gt \frac{1}{2}(Z_{max} - Z_{min}) 
+          \end{cases} $$
 
           <p><b>Compute the Camera Response</b></p>
 
           <p>Using these components, we can solve for the camera response.  Because this is an overdetermined system, we wish to minimize the following objective function, which consists of a fitting term (left component) and a smoothing term (right component):
 
-          $$ O = \sum_{i=1}^{N} \sum_{j=1}^{P} {w(Z_{ij}) [g(Z_{ij} - \ln E_{i} - \ln \Delta t_{j})]}^{2} + \lambda \sum_{z=Z_{min}+1}^{Z_{max}-1}[w(z) g''(z)]^{2}$$
-          
-          This can be done using the <span class="code">gsolve.m</span> provided in the <a href="http://www.pauldebevec.com/Research/HDR/debevec-siggraph97.pdf">Debevec 1997</a> paper.
+              $$ O = \sum_{i=1}^{N} \sum_{j=1}^{P} {w(Z_{ij}) [g(Z_{ij} - \ln E_{i} - \ln \Delta t_{j})]}^{2} + \lambda \sum_{z=Z_{min}+1}^{Z_{max}-1}[w(z) g''(z)]^{2}$$
+
+              This can be done using the <span class="code">gsolve.m</span> provided in the <a href="http://www.pauldebevec.com/Research/HDR/debevec-siggraph97.pdf">Debevec 1997</a> paper.
           </p>
 
           <p><b>Compute the HDR Radiance Map</b></p>
 
           <p>Once we have this information, we can finally compute the radiance map.  The equation we follow for the log of the radiance is as follows:
 
-          $$\ln E_{i} = \frac{\sum_{j=1}^{P} w(Z_{ij})[g(Z_{ij} - \ln \Delta t_{j})]}{\sum_{j=1}^{P} w_(Z_{ij})}$$
+              $$\ln E_{i} = \frac{\sum_{j=1}^{P} w(Z_{ij})[g(Z_{ij} - \ln \Delta t_{j})]}{\sum_{j=1}^{P} w_(Z_{ij})}$$
 
           </p>
 
           <h3>Tone Mapping</h3>
 
-          <h2 id="hdr_results">Results</h2>
+          <p>We toyed with three different schemes for tone mapping in order to form a comparison: a linear tone map, a global tone map (as proposed in <a href="http://www.cs.utah.edu/~reinhard/cdrom/tonemap.pdf">Reinhard 2002</a>), and a bilateral filtering-based tone map (as proposed in <a href="http://people.csail.mit.edu/fredo/PUBLI/Siggraph2002/DurandBilateral.pdf">Durand 2002</a>).  In general, Durand's method produced the most realistic results and was consistently successful, while the linear tone map, as expected, produced generally poor results.</p>  
 
-          <h2 id="hdr_references">References</h2>
+          <p>We detail the methodology used below.</p>
 
-      <div class="header">
-        <p class="text-muted">Akshay Narayan and Japheth Wong &#9733; CS194-26 &#9733; Final Project &#9733; <a href="#" style="color:gray">Top</a></p>
-      </div>
+          <p><b>Linear Tone Map</b></p>
 
-      </div>
+          <p>We begin by recovering the luminance map from the HDR radiance map computed in the previous part.  We used a standard equation for the <a href="https://en.wikipedia.org/wiki/Relative_luminance">sRGB scheme</a>:
 
-      <div class="header">
+            $$ L = 0.2126 R + 0.7152 G + 0.0722 B $$
+
+            Given the luminance map, we simply rescale the luminances as a fraction of the maximum luminance value and plot this.  Predictability, this generally results in very dark images overall.
+        </p>
+
+        <p><b>Global Tone Map</b></p>
+
+        <p>This tone mapping algorithm takes in a parameter \(a\), which affects the brightness in the result.  Values of 0.18, 0.36, 0.72, etc. are good for brighter images, while values such as 0.09, 0.045, etc. are better for darker images.</p>
+
+        <p>We begin by computing the key of the image, which roughly maps to the keys used by traditional photographers.  Let \(L_{w}\) represent the luminance map recovered from the HDR radiance map.  Then the key of the image is computed as follows:
+            $$ \bar L_{w} = \frac{1}{N} \exp {(\sum_{x,y} \log[\delta + L_{w}(x, y)])} $$
+
+            We can then use this key value to scale our luminance map as follows:
+
+            $$ L(x, y) = \frac{a}{\bar L_{w}} L_{w} (x, y) $$
+
+            This scaled luminance can then be used to compute the final, displayable luminance value.  Such a mapping allows us to create a non-linear mapping which compresses primarily the high luminances in the image.
+
+            $$ L_{d}(x, y) = \frac{L(x, y)}{1 + L(x, y)} $$
+
+            This method tended to produce far better results, although the colors would sometimes look a little too intense or dark to be realistic.  It also didn't work as well when there were very large contrasts in luminance.
+        </p>
+
+        <p><b>Bilateral Filtering</b></p>
+
+        <p>This tone mapping scheme was more involving and required two input parameters: (1) a \(dR\) parameter to govern the dynamic range stops (this ranges from 2 to 8; values of 4 or 5 tended to work well) and (2) \(\gamma\), a parameter to use in gamma compression to adjust the intensity of the result.</p>
+
+        <p>We began by computing the average intensity \(I\) of the color channels, which was used to compute the chrominance channels \(\frac{R}{I}, \frac{G}{I}, \frac{B}{I}\) respectively.  We then computed the log intensity \(L = \log_{2}(I)\) which is filtered by the bilateral filter to create result \(B\).</p>
+
+        <p>The bilateral filter is a filter whcih consists of two components: (1) a filter for the spatial domain (which operates on the basis of geometric distance between two pixels) and (2) a filter for the intensity domain (which operates on the basis of the distance between the intensities of the pixels).  The result is a filter which is able to preserve edge boundaries and eliminate the halo effects of algorithms proposed prior to <a href="http://people.csail.mit.edu/fredo/PUBLI/Siggraph2002/DurandBilateral.pdf">Durand's 2002 publication</a>.  To speed up the computation, we use a window \(\xi\) to sample neighboring values from.  Let \(I\) be the image we are sampling from.  The formula we thus implement for the value at pixel \(x\) is given as follows:
+
+            $$ B(x) = \frac{1}{k(x)} \sum_{p \in \xi} c(x, p) s(x, p) I(p) $$
+
+            The Gaussian for the spatial domain takes the following equation:
+
+            $$ c(x, p) = \exp {\{-\frac{1}{2} (\frac{|x-p|}{\sigma_{d}})^{2}\}} $$
+
+            Similarly, the Gaussian for the intensity domain takes the following equation; notice that we are interested in the difference in intensities rather than location:
+
+            $$ s(x, p) = \exp {\{-\frac{1}{2} (\frac{|I(x)-I(p)|}{\sigma_{r}})^{2}\}} $$
+
+            Finally, we have a normalization factor as follows:
+
+            $$k(x) = \sum_{p \in \xi} c(x, p) s(x, p) $$
+        </p>
+
+        <p>Using this filter, we can separate out the detail layer of the image from base with the equation \(D = L - B\).  From this, we can thus rescale and offset our base image as follows:
+
+            $$ o = \max(B) $$
+            $$ s = \frac{dR}{\max(B) - \min(B)} $$
+            $$ B' = \frac{B - o}{s} $$
+
+            From this, we can finally reconstruct the log intensity of the image:
+
+            $$ O = 2^{B' + D} $$
+
+            Using this, we can finally compute the results per channel and apply gamma compression to get the final result:
+
+            $$ R' = (O \times \frac{R}{I})^{\gamma} $$
+            $$ G' = (O \times \frac{G}{I})^{\gamma} $$
+            $$ B' = (O \times \frac{B}{I})^{\gamma} $$
+
+        </p>
+
+        <h2 id="hdr_results">Results</h2>
+
+        <p>We have included four results, two of which are sample images downloaded from Brown University's assignment page, and two of which are our own images.</p>
+
+        <h3>Result 1: Station</h3>
+
+        <p>This was one of the sample image sets.  In this case, the colors in the global tone map were more vivid, although the bilinear filtering method was able to produce a tone map which recovered more of the dynamic range of the image.</p>
+
+        <table class="results">
+            <tr>
+                <td colspan="3">Input Images</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/input/station1.jpg" /></td>
+                <td><img src="images/hdr/input/station2.jpg" /></td>
+                <td><img src="images/hdr/input/station3.jpg" /></td>
+            </tr>
+            <tr>
+                <td>Exposure Time: 0.0016 s</td>
+                <td>Exposure Time: 0.0063 s</td>
+                <td>Exposure Time: 0.0250 s</td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Camera Response</td>
+                <td>Radiance Map</td>
+                <td>Detail Layer</td>
+                <td>Intensity Map</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/station_response_plot.jpg" /></td>
+                <td><img src="images/hdr/output/station_radiance_map.jpg" /></td>
+                <td><img src="images/hdr/output/station_detail_layer.jpg" /></td>
+                <td><img src="images/hdr/output/station_intensity.jpg" /></td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Result: Linear Tone Map (Baseline)</td>
+                <td>Result: Global Tone Map (Reinhard 2002)</td>
+                <td>Result: Bilateral Filter Tone Map (Durand 2002)</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/station_linear_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/station_global_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/station_durand_hdr.jpg" /></td>
+            </tr>
+        </table>
+
+        <h3>Result 2: Garage</h3>
+
+        <p>This was another one of the sample image sets.  In this case, the global tone map produced a reasonable result, although the trees in the background remained very dark.  The bilateral-filtered result was able to accentuate the trees far better.</p>
+
+        <table class="results">
+            <tr>
+                <td colspan="4">Input Images</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/input/garage-6.jpg" /></td>
+                <td><img src="images/hdr/input/garage-5.jpg" /></td>
+                <td><img src="images/hdr/input/garage-4.jpg" /></td>
+                <td><img src="images/hdr/input/garage-3.jpg" /></td>
+            </tr>
+            <tr>
+                <td>Exposure Time: 1.5 s</td>
+                <td>Exposure Time: 2.0 s</td>
+                <td>Exposure Time: 3.0 s</td>
+                <td>Exposure Time: 4.0 s</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/input/garage-2.jpg" /></td>
+                <td><img src="images/hdr/input/garage-1.jpg" /></td>
+                <td><img src="images/hdr/input/garage-7.jpg" /></td>
+                <td><img src="images/hdr/input/garage-8.jpg" /></td>
+            </tr>
+            <tr>
+                <td>Exposure Time: 6.0 s</td>
+                <td>Exposure Time: 8.0 s</td>
+                <td>Exposure Time: 10.0 s</td>
+                <td>Exposure Time: 15.0 s</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/input/garage-9.jpg" /></td>
+                <td><img src="images/hdr/input/garage-10.jpg" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Exposure Time: 20.0 s</td>
+                <td>Exposure Time: 30.0 s</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Camera Response</td>
+                <td>Radiance Map</td>
+                <td>Detail Layer</td>
+                <td>Intensity Map</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/garage_response_plot.jpg" /></td>
+                <td><img src="images/hdr/output/garage_radiance_map.jpg" /></td>
+                <td><img src="images/hdr/output/garage_detail_layer.jpg" /></td>
+                <td><img src="images/hdr/output/garage_intensity.jpg" /></td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Result: Linear Tone Map (Baseline)</td>
+                <td>Result: Global Tone Map (Reinhard 2002)</td>
+                <td>Result: Bilateral Filter Tone Map (Durand 2002)</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/garage_linear_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/garage_global_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/garage_durand_hdr.jpg" /></td>
+            </tr>
+        </table>
+
+        <h3>Result 3: Aviemore Loch</h3>
+
+        <p><b>(Bells and Whistles)</b>  We shot these photos ourselves in November 2013 at Loch Puladdern in the Craigellachie Nature Preserve in Aviemore, Scotland.  It was a beautiful sunrise in Cairngorms National Park, and being outside the peak tourist season, the only other people there were the University of Edinburgh students on the trip with me.</p>
+
+        <table class="results">
+            <tr>
+                <td colspan="3">Input Images</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/input/aviemore_3.jpg" /></td>
+                <td><img src="images/hdr/input/aviemore_2.jpg" /></td>
+                <td><img src="images/hdr/input/aviemore_1.jpg" /></td>
+            </tr>
+            <tr>
+                <td>Exposure Time: 0.2500 s</td>
+                <td>Exposure Time: 0.4000 s</td>
+                <td>Exposure Time: 0.7692 s</td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Camera Response</td>
+                <td>Radiance Map</td>
+                <td>Detail Layer</td>
+                <td>Intensity Map</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/aviemore_response_plot.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore_radiance_map.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore_detail_layer.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore_intensity.jpg" /></td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Result: Linear Tone Map (Baseline)</td>
+                <td>Result: Global Tone Map (Reinhard 2002)</td>
+                <td>Result: Bilateral Filter Tone Map (Durand 2002)</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/aviemore_linear_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore_global_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore_durand_hdr.jpg" /></td>
+            </tr>
+        </table>
+
+        <h3>Result 4: Aviemore Loch (Take 2!)</h3>
+
+        <p><b>(Bells and Whistles)</b>  Another set of photos we shot on the same morning.  These photos were taken at Loch Puladdern in the Craigellachie Nature Preserve in Aviemore, Scotland.  Sunrises are magical, and as some Scottish photoraphers put it, "There's absolutely nothing like Scottish light".</p>
+
+        <table class="results">
+            <tr>
+                <td colspan="4">Input Images</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/input/aviemore2_4.jpg" /></td>
+                <td><img src="images/hdr/input/aviemore2_1.jpg" /></td>
+                <td><img src="images/hdr/input/aviemore2_2.jpg" /></td>
+                <td><img src="images/hdr/input/aviemore2_3.jpg" /></td>
+            </tr>
+            <tr>
+                <td>Exposure Time: 0.2000 s</td>
+                <td>Exposure Time: 0.3333 s</td>
+                <td>Exposure Time: 0.6250 s</td>
+                <td>Exposure Time: 1.0000 s</td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Camera Response</td>
+                <td>Radiance Map</td>
+                <td>Detail Layer</td>
+                <td>Intensity Map</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/aviemore2_response_plot.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore2_radiance_map.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore2_detail_layer.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore2_intensity.jpg" /></td>
+            </tr>
+        </table>
+
+        <table class="results">
+            <tr>
+                <td>Result: Linear Tone Map (Baseline)</td>
+                <td>Result: Global Tone Map (Reinhard 2002)</td>
+                <td>Result: Bilateral Filter Tone Map (Durand 2002)</td>
+            </tr>
+            <tr>
+                <td><img src="images/hdr/output/aviemore2_linear_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore2_global_hdr.jpg" /></td>
+                <td><img src="images/hdr/output/aviemore2_durand_hdr.jpg" /></td>
+            </tr>
+        </table>
+
+        <h2 id="hdr_references">References</h2>
+
+        <p>This turned out to be a fairly involving project which included many references, which we've listed below:</p>
+
+        <ul>
+            <li><a href="https://www.cs.duke.edu/~tomasi/papers/tomasi/tomasiIccv98.pdf">Bilateral Filtering for Gray and Color Images (Tomasi, IEEE 1998)</a></li>
+            <li><a href="http://cs.brown.edu/courses/csci1290/lectures/17.pdf">Brown University CS129 Lecture 17: Recovering High Dynamic Range</a></li>
+            <li><a href="http://cs.brown.edu/courses/csci1290/lectures/18.pdf">Brown University CS129 Lecture 18: Tone Mapping</a></li>
+            <li><a href="http://people.csail.mit.edu/fredo/PUBLI/Siggraph2002/DurandBilateral.pdf">Fast Bilateral Filtering for HDR Display (Durand, SIGGRAPH 2002)</a></li>
+            <li><a href="http://www.cs.huji.ac.il/~danix/hdr/hdrc.pdf">Gradient Domain High Dynamic Range Compression (Fattal, SIGGRAPH 2002)</a></li>
+            <li><a href="http://www.cs.utah.edu/~reinhard/cdrom/tonemap.pdf">Photographic Tone Reproduction for Digital Images (Reinhard, SIGGRAPH 2002)</a></li>
+            <li><a href="http://www.pauldebevec.com/Research/HDR/debevec-siggraph97.pdf">Recovering High Dynamic Range Radiance Maps from Photographs (Debevec, SIGGRAPH 1997)</a></li>
+            <li><a href="http://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color">Stack Overflow: Formula to Determine Brightness of RGB Color</a></li>
+            <li><a href="http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/MANDUCHI1/Bilateral_Filtering.html">University of Edinburgh: Bilateral Filtering for Gray and Color Images</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Relative_luminance">Wikipedia: Relative Luminance</a></li>
+        </ul>
+
+        <div class="header">
+            <p class="text-muted">Akshay Narayan and Japheth Wong &#9733; CS194-26 &#9733; Final Project &#9733; <a href="#" style="color:gray">Top</a></p>
+        </div>
+
+    </div>
+
+    <div class="header">
         <p class="text-muted">&#9733; Fake Miniatures &#9733; <a style="color:gray" id="#openTF"></a></p>
-      </div>
+    </div>
 
-      <div id="miniatures">
+    <div id="miniatures">
         <h1>Fake Miniatures</h1>
         
         <div id="#miniaturesOverview">
-        <h2 id="miniatures_overview">Project Overview</h2>
-          <p>
-            This project involved creating the Tilt Shift effect automatically. This cool effect makes it seem like the subject of a photo is a miniature model, since other parts of the photo are blurred out. The following picture of an actual miniature (taken by me at Legoland) shows this effect.
-          </p>
-          <img src="images/miniatures/actualMiniature.jpg"/>
-          <p>
-            As you can see, while the subject is in focus, parts of the image at other depths are not. This project seeks to fake this effect on non-miniature photographs. This is done by selecting a focus line and a depth of field around the focus line that will remain sharp, then progressively blurring the image using a gaussian filter as you move away from the focus line. This approach has limitations, however; if the object you wish to focus on is very tall, then while it would be in focus in an actual tilt shift photograph since all of the object is at the same depth, this approach can lead to parts of the object at the same depth ending up at different levels of sharpness. Therefore, as seen below in some of the pictures in the results section, this approach works best with images that are laid out such that horizontal strips of the image correspond to levels of depth.
-          </p>
+            <h2 id="miniatures_overview">Project Overview</h2>
+            <p>
+                This project involved creating the Tilt Shift effect automatically. This cool effect makes it seem like the subject of a photo is a miniature model, since other parts of the photo are blurred out. The following picture of an actual miniature (taken by me at Legoland) shows this effect.
+            </p>
+            <img src="images/miniatures/actualMiniature.jpg"/>
+            <p>
+                As you can see, while the subject is in focus, parts of the image at other depths are not. This project seeks to fake this effect on non-miniature photographs. This is done by selecting a focus line and a depth of field around the focus line that will remain sharp, then progressively blurring the image using a gaussian filter as you move away from the focus line. This approach has limitations, however; if the object you wish to focus on is very tall, then while it would be in focus in an actual tilt shift photograph since all of the object is at the same depth, this approach can lead to parts of the object at the same depth ending up at different levels of sharpness. Therefore, as seen below in some of the pictures in the results section, this approach works best with images that are laid out such that horizontal strips of the image correspond to levels of depth.
+            </p>
         </div>
         <div id="#miniaturesResults">
           <h2 id="miniatures_results">Results</h2>
@@ -142,175 +451,175 @@
             <tr>
               <td>Original Image</td>
               <td>Fake Miniature Image</td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/sample.jpg"/></td>
               <td><img src="images/miniatures/sample_out.jpg"/></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/castle.jpg"/></td>
               <td><img src="images/miniatures/castle_out.jpg"/></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/mountain.jpg"/></td>
               <td><img src="images/miniatures/mountain_out.jpg"/></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/coast.jpg"/></td>
               <td><img src="images/miniatures/coast_out.jpg"/></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/airport.jpg"/></td>
               <td><img src="images/miniatures/airport_out.jpg"/></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/sf.jpg"/></td>
               <td><img src="images/miniatures/sf_out.jpg"/></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
               <td><img src="images/miniatures/village.jpg"/></td>
               <td><img src="images/miniatures/village_out.jpg"/></td>
-            </tr>
-          </table>
-        </div>
-        <p>
-          All pictures above were taken by me except the following.
-        </p>
-        <ul>
-          <li> Castle: wayman72 on flickr</li>
-          <li> Village: Bernard Fourmond on flickr</li>
-          <li> Airport: David Brown on flickr</li>
-          <li> Coastal Town: From project spec</li>
-        </ul>
+          </tr>
+      </table>
+  </div>
+  <p>
+      All pictures above were taken by me except the following.
+  </p>
+  <ul>
+      <li> Castle: wayman72 on flickr</li>
+      <li> Village: Bernard Fourmond on flickr</li>
+      <li> Airport: David Brown on flickr</li>
+      <li> Coastal Town: From project spec</li>
+  </ul>
 
-      <div class="header">
+  <div class="header">
+    <p class="text-muted">Akshay Narayan and Japheth Wong &#9733; CS194-26 &#9733; Final Project &#9733; <a href="#" style="color:gray">Top</a></p>
+</div>
+</div>
+
+<div class="header">
+    <p class="text-muted">&#9733; Fake Miniatures &#9733; <a style="color:gray" id="#openVertigo"></a></p>
+</div>
+
+<div id="vertigo">
+  <h1>Vertigo Shots</h1>
+
+  <div id="vertigoOverview">
+    <h2 id="vertigo_overview">Project Overview</h2>
+    <p>
+      The "Vertigo Shot" or "Dolly Zoom" effect, an example of which can be seen <a href="http://www.youtube.com/watch?v=Y48R6-iIYHs">here</a>, is an interesting effect in which a subject of a photo stays the same size while the background morphs around it throughout a series of photographs or a movie clip.
+  </p>
+  <p>
+      This effect is created by moving the camera away from the subject while also increasing the zoom level such that the subject appears the same size. The zooming results in a warping effect on the background of the photograph. Since the background is warping while the subject stays the same, the resulting photo sequence can look pretty cool, as seen below.
+  </p>
+</div>
+<div id="vertigoResults">
+    <h2 id="vertigo_results">Results</h2>
+    <h3>The Backpack Shot</h3>
+    <div id="carousel_bpk" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#carousel_bpk" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel_bpk" data-slide-to="1"></li>
+        <li data-target="#carousel_bpk" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" id="theCarousel">
+        <!-- Add elements here. -->
+        <div class="item">
+          <img src="images/vertigo/backpack/backpack0.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack1.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack2.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack3.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack4.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack5.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack6.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack7.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack8.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack9.jpg"/>
+      </div>
+      <div class="item">
+          <img src="images/vertigo/backpack/backpack10.jpg"/>
+      </div>
+  </div>
+
+  <a class="left carousel-control" href="#carousel_bpk" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+  <a class="right carousel-control" id="go_right_bpk" href="#carousel_bpk" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div><!-- /.carousel -->
+<h3>The Keychain Shot</h3>
+<div id="carousel_key" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel_key" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel_key" data-slide-to="1"></li>
+    <li data-target="#carousel_key" data-slide-to="2"></li>
+</ol>
+<div class="carousel-inner" id="theCarousel">
+    <!-- Add elements here. -->
+    <div class="item">
+      <img src="images/vertigo/keychain/keychain0.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain1.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain2.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain3.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain4.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain5.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain6.jpg"/>
+  </div>
+  <div class="item">
+      <img src="images/vertigo/keychain/keychain7.jpg"/>
+  </div>
+</div>
+
+<a class="left carousel-control" href="#carousel_key" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+<a class="right carousel-control" id="go_right_key" href="#carousel_key" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div><!-- /.carousel -->
+</div>
+<div id="vertigoBW">
+    <h2 id="vertigo_bw">Bells and Whistles</h2>
+    <p>
+      It is easier to see this effect as an animation. To this end, we have compiled the Vertigo Effect pictures into animated gifs. As can be seen, it is quite hard to perfectly align the subject of the photo so that it is completely constant throughout the frames of the animation.
+  </p>
+  <img src="images/vertigo/backpack/backpack.gif"/>
+  <br>
+  <img src="images/vertigo/keychain/keychain.gif"/>
+</div>
+</div>
+
+<div class="footer">
+    <div class="header">
         <p class="text-muted">Akshay Narayan and Japheth Wong &#9733; CS194-26 &#9733; Final Project &#9733; <a href="#" style="color:gray">Top</a></p>
-      </div>
-      </div>
-
-      <div class="header">
-        <p class="text-muted">&#9733; Fake Miniatures &#9733; <a style="color:gray" id="#openVertigo"></a></p>
-      </div>
-
-      <div id="vertigo">
-          <h1>Vertigo Shots</h1>
-
-          <div id="vertigoOverview">
-            <h2 id="vertigo_overview">Project Overview</h2>
-            <p>
-              The "Vertigo Shot" or "Dolly Zoom" effect, an example of which can be seen <a href="http://www.youtube.com/watch?v=Y48R6-iIYHs">here</a>, is an interesting effect in which a subject of a photo stays the same size while the background morphs around it throughout a series of photographs or a movie clip.
-            </p>
-            <p>
-              This effect is created by moving the camera away from the subject while also increasing the zoom level such that the subject appears the same size. The zooming results in a warping effect on the background of the photograph. Since the background is warping while the subject stays the same, the resulting photo sequence can look pretty cool, as seen below.
-            </p>
-          </div>
-          <div id="vertigoResults">
-            <h2 id="vertigo_results">Results</h2>
-            <h3>The Backpack Shot</h3>
-            <div id="carousel_bpk" class="carousel slide" data-ride="carousel">
-              <!-- Indicators -->
-              <ol class="carousel-indicators">
-                <li data-target="#carousel_bpk" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel_bpk" data-slide-to="1"></li>
-                <li data-target="#carousel_bpk" data-slide-to="2"></li>
-              </ol>
-              <div class="carousel-inner" id="theCarousel">
-                <!-- Add elements here. -->
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack0.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack1.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack2.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack3.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack4.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack5.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack6.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack7.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack8.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack9.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/backpack/backpack10.jpg"/>
-                </div>
-              </div>
-
-              <a class="left carousel-control" href="#carousel_bpk" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-              <a class="right carousel-control" id="go_right_bpk" href="#carousel_bpk" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-            </div><!-- /.carousel -->
-            <h3>The Keychain Shot</h3>
-            <div id="carousel_key" class="carousel slide" data-ride="carousel">
-              <!-- Indicators -->
-              <ol class="carousel-indicators">
-                <li data-target="#carousel_key" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel_key" data-slide-to="1"></li>
-                <li data-target="#carousel_key" data-slide-to="2"></li>
-              </ol>
-              <div class="carousel-inner" id="theCarousel">
-                <!-- Add elements here. -->
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain0.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain1.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain2.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain3.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain4.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain5.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain6.jpg"/>
-                </div>
-                <div class="item">
-                  <img src="images/vertigo/keychain/keychain7.jpg"/>
-                </div>
-              </div>
-
-              <a class="left carousel-control" href="#carousel_key" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-              <a class="right carousel-control" id="go_right_key" href="#carousel_key" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-            </div><!-- /.carousel -->
-          </div>
-          <div id="vertigoBW">
-            <h2 id="vertigo_bw">Bells and Whistles</h2>
-            <p>
-              It is easier to see this effect as an animation. To this end, we have compiled the Vertigo Effect pictures into animated gifs. As can be seen, it is quite hard to perfectly align the subject of the photo so that it is completely constant throughout the frames of the animation.
-            </p>
-            <img src="images/vertigo/backpack/backpack.gif"/>
-            <br>
-            <img src="images/vertigo/keychain/keychain.gif"/>
-          </div>
-        </div>
-
-      <div class="footer">
-        <div class="header">
-        <p class="text-muted">Akshay Narayan and Japheth Wong &#9733; CS194-26 &#9733; Final Project &#9733; <a href="#" style="color:gray">Top</a></p>
-        </div>
-      </div>
     </div>
+</div>
+</div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -322,5 +631,5 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
     <script src="js/loader.js"></script>
-  </body>
+</body>
 </html>
