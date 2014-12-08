@@ -81,3 +81,8 @@ table.results tr td {
 *.code {
   font-family: courier;
 }
+
+img.vertigo_gif {
+  max-width: 752px;
+  height: auto;
+}
