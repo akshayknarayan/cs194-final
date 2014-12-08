@@ -1,6 +1,5 @@
 * {
   font-family: "Helvetica Nueue", "Helvetica", "sans";
-  font-size:large;
 }
 
 .header {
@@ -54,7 +53,7 @@ h1, h2, h3 {
 }
 
 p {
-  padding:10px;
+  /*padding:10px;*/
 }
 
 hr {
@@ -69,4 +68,16 @@ li, table {
 
 iframe {
   margin: 0 auto;
+}
+
+table.results tr:first-child, table.results tr:first-child {
+  font-weight: bold;
+}
+
+table.results tr td {
+  padding: 5px
+}
+
+*.code {
+  font-family: courier;
 }
